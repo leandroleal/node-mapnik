@@ -22,6 +22,7 @@ public:
     static Handle<Value> features(const Arguments &args);
     static Handle<Value> featureset(const Arguments &args);
     static Handle<Value> extent(const Arguments &args);
+    static Handle<Value> feature_at_point(const Arguments &args);
 
     Datasource();
     inline mapnik::datasource_ptr get() { return datasource_; }

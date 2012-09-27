@@ -25,6 +25,7 @@ void Datasource::Initialize(Handle<Object> target) {
     NODE_SET_PROTOTYPE_METHOD(constructor, "features", features);
     NODE_SET_PROTOTYPE_METHOD(constructor, "featureset", featureset);
     NODE_SET_PROTOTYPE_METHOD(constructor, "extent", extent);
+    NODE_SET_PROTOTYPE_METHOD(constructor, "feature_at_point", feature_at_point);
 
     target->Set(String::NewSymbol("Datasource"),constructor->GetFunction());
 }
@@ -177,6 +178,22 @@ Handle<Value> Datasource::extent(const Arguments& args)
     a->Set(2, Number::New(e.maxx()));
     a->Set(3, Number::New(e.maxy()));
     return scope.Close(a);
+}
+
+Handle<Value> Datasource::feature_at_point(const Arguments& args)
+{
+    HandleScope scope;
+    Datasource* d = ObjectWrap::Unwrap<Datasource>(args.This());
+    
+
+    mapnik::featureset_ptr fs = d->datasource_->features_at_point(mapnik::coord2d(args[0]->NumberValue(),args[1]->NumberValue()));
+    
+    if (fs)
+    {
+        return scope.Close(Featureset::New(fs));
+    }
+
+    return Undefined();
 }
 
 Handle<Value> Datasource::describe(const Arguments& args)
